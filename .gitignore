@@ -2,3 +2,4 @@
 __pycache__/
 .idea/
 fluor/fluor/.env
+fluor/db.sqlite3
