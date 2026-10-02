@@ -7,5 +7,10 @@
 <body>
 <h1>{{title}}</h1>
 <p>{% block message %}{% endblock %}</p>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Зарегистрироваться</button>
+</form>
 </body>
 </html>
