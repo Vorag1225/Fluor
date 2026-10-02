@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
-from django.urls import reverse_lazy
 from .forms import *
 
 # Create your views here.
@@ -14,7 +13,6 @@ def main_view(request):
 class RegistrationUser(CreateView):
     form_class = RegistrationForm
     template_name = 'html/registration.html'
-    success_url = reverse_lazy('main')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
