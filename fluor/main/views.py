@@ -5,4 +5,10 @@ from django.shortcuts import render
 def main_view(request):
     return HttpResponse("Пустышка")
 def registration_view(request):
-    return render(request, "html/registration.html")
+    return render(request, "html/registration.html",context={
+        'title':'Регистрация',
+    })
+def login_view(request):
+    return render(request, "html/login.html", context={
+        'title': 'Вход',
+    })

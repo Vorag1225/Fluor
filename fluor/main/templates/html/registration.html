@@ -1,10 +1,2 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Регистрация</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'html/reg_log_template.html'%}
+{% block message %}Уже зарегистрированы? <a href="{% url 'login' %}">Войти{% endblock %}</a>
