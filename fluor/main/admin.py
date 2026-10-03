@@ -5,4 +5,4 @@ from .models import *
 class PostAdmin(admin.ModelAdmin):
     list_display = ['id','user','description','icon']
     list_filter = []
-    search_fields = []
+    search_fields = ['user__username','user__first_name']
