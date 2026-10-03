@@ -1,3 +1,8 @@
 from django.contrib import admin
-
+from .models import *
 # Register your models here.
+@admin.register(Profile)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['id','user','description','icon']
+    list_filter = []
+    search_fields = []
