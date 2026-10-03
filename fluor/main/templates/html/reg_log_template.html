@@ -140,7 +140,15 @@
 
             {% if form.non_field_errors %}
                 <div class="alert-error">
-                    Пароль или логин введены неверно
+                    {% if title == "Вход" or title == "Авторизация" %}
+                        <p>Пароль или логин введены неверно</p>
+                    {% else %}
+                        <ul class="errorlist">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             {% endif %}
 
