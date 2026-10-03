@@ -25,3 +25,5 @@ urlpatterns = [
     path('login/', LoginUser.as_view(), name='login'),
     path('users/<id>',profile_view, name = 'profile'),
 ]
+
+handler404 = error_404_view

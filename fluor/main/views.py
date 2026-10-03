@@ -46,3 +46,10 @@ def profile_view(request,id):
         'user': user
     }
     return render(request, 'html/profile.html',context)
+
+def error_404_view(request,exception):
+    context = {
+        'message':'Похоже, страница, которую вы ищете, не существует...',
+        'error_code':'404 - Not Found',
+    }
+    return render(request,'html/error_page.html',status=404,context=context)
