@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{user.first_name}}</title>
+</head>
+<body>
+<h1>{{user.first_name}}</h1>
+{% if user.profile.description == "" %}
+<p><i>Тут пустовато...</i></p>
+{% else %}
+<p>{{user.profile.description}}</p> <!-- Описание -->
+{% endif %}
+<h2>Посты</h2>
+<p><i>Здесь будет место для постов</i></p>
+</body>
+</html>

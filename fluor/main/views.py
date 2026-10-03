@@ -1,9 +1,10 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
+from django.contrib.auth.models import User
 from .forms import *
 from .models import *
 
@@ -39,3 +40,9 @@ def logout_user(request):
     logout(request)
     return redirect('main')
 
+def profile_view(request,id):
+    user = get_object_or_404(User, id=id)
+    context = {
+        'user': user
+    }
+    return render(request, 'html/profile.html',context)
