@@ -1,0 +1,10 @@
+{% extends 'html/reg_log_template.html' %}
+
+{% block actions %}
+    {% if form %}
+        <button type="submit" class="btn-submit">Зарегистрироваться</button>
+    {% else %}
+        <a href="{% url 'registration' %}" class="btn-submit">Зарегистрироваться</a>
+    {% endif %}
+    <p class="auth-link">Уже зарегистрированы? <a href="{% url 'login' %}">Войти</a></p>
+{% endblock %}
