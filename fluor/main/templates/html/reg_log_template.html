@@ -60,6 +60,17 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         }
 
+        .alert-error {
+            background-color: #fdecea;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #e74c3c;
+            font-size: 14px;
+        }
+
         .errorlist {
             list-style: none;
             padding: 0;
@@ -68,6 +79,18 @@
             font-size: 13px;
             text-align: left;
         }
+
+        .form-group.has-error .form-input {
+            border-color: #e74c3c;
+            background-color: #fff8f8;
+        }
+
+        .form-group.has-error .form-input:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+
+        .form-group.has-error label { color: #e74c3c; }
 
         .btn-submit {
             display: block;
@@ -112,12 +135,18 @@
     <div class="auth-card">
         <h2>{{ title }}</h2>
 
-        <form method="post" action="">
+        <form method="post" action="" novalidate>
             {% csrf_token %}
 
+            {% if form.non_field_errors %}
+                <div class="alert-error">
+                    Пароль или логин введены неверно
+                </div>
+            {% endif %}
+
             {% for field in form %}
-                <div class="form-group">
-                    <label>{{ field.label }}</label>
+                <div class="form-group{% if field.errors %} has-error{% endif %}">
+                    <label {{ field.id_for_label }}>{{ field.label }}</label>
                     {{ field }}
 
                     {% if field.errors %}
