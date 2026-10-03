@@ -5,6 +5,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 from .forms import *
+from .models import *
 
 # Create your views here.
 def main_view(request):
@@ -21,6 +22,7 @@ class RegistrationUser(CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        Profile.objects.create(user=user)
         login(self.request, user)
         return redirect('main')
 
