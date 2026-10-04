@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,Http404
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
@@ -41,11 +41,14 @@ def logout_user(request):
     return redirect('main')
 
 def profile_view(request,id):
-    user = get_object_or_404(User, id=id)
-    context = {
-        'user': user
-    }
-    return render(request, 'html/profile.html',context)
+    try:
+        user = get_object_or_404(User, id=id)
+        context = {
+            'user': user
+        }
+        return render(request, 'html/profile.html',context)
+    except ValueError:
+        raise Http404("")
 
 def error_404_view(request,exception):
     context = {
