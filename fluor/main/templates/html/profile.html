@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.first_name }}</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+        }
+
+        .profile-head {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eef1f4;
+        }
+
+        .avatar {
+            flex-shrink: 0;
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background-color: #4a90e2;
+            color: #fff;
+            font-size: 26px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-transform: uppercase;
+            user-select: none;
+            object-fit: cover;
+        }
+
+        .profile-head h1 {
+            margin: 0 0 4px;
+            font-size: 22px;
+            color: #333333;
+        }
+
+        .section { margin-top: 28px; }
+
+        .section h2 {
+            margin: 0 0 12px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #000000;
+        }
+
+        .description {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #000000;
+            white-space: pre-line;
+        }
+
+        .empty {
+            margin: 0;
+            padding: 20px;
+            border: 1px dashed #d5dde5;
+            border-radius: 8px;
+            background-color: #fafcfd;
+            color: #000000;
+            font-size: 14px;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .post {
+            padding: 14px 18px;
+            border-left: 3px solid #4a90e2;
+            border-radius: 6px;
+            background-color: #f9fbfd;
+            transition: background-color 0.25s;
+        }
+
+        .post + .post { margin-top: 10px; }
+        .post:hover { background-color: #eef5fc; }
+
+        .post h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+            color: #000000;
+        }
+
+        .post p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #000000;
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 12px; }
+            .card { padding: 24px 20px; }
+            .profile-head { flex-direction: column; text-align: center; }
+            .profile-head h1 { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+
+        <div class="profile-head">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="Аватар" class="avatar">
+            {% else %}
+                <div class="avatar">
+                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                </div>
+            {% endif %}
+
+            <div>
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>О себе</h2>
+            {% if user.profile.description %}
+                <p class="description">{{ user.profile.description }}</p>
+            {% else %}
+                <p class="empty">Тут пустовато...</p>
+            {% endif %}
+        </div>
+
+        <div class="section">
+            <h2>Посты</h2>
+            {% for post in posts %}
+                <article class="post">
+                    <h3>{{ post.title }}</h3>
+                    <p>{{ post.text|truncatechars:180 }}</p>
+                </article>
+            {% empty %}
+                <p class="empty">Здесь будет место для постов</p>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
