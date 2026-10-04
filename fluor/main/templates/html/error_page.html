@@ -2,12 +2,93 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ошибка</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .error-card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+        }
+
+        .error-card h1 {
+            margin: 0 0 20px 0;
+            font-size: 26px;
+            color: #333333;
+        }
+
+        .error-message {
+            background-color: #fdecea;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            color: #e74c3c;
+            font-size: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .error-code {
+            display: inline-block;
+            font-size: 14px;
+            color: #000000;
+            font-weight: normal;
+            font-style: normal;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-submit:hover { background-color: #357abd; }
+        .btn-submit:active { transform: scale(0.98); }
+    </style>
 </head>
 <body>
-<h1>Ой...</h1>
-<p>{{message}}</p>
-<p><i>{{error_code}}</i></p>
-<a href = "{% url 'main' %}">Вернуться в Поток</a>
+    <div class="error-card">
+        <h1>Ой...</h1>
+
+        {% if message %}
+            <div class="error-message">{{ message }}</div>
+        {% endif %}
+
+        {% if error_code %}
+            <div class="error-code">{{ error_code }}</div>
+        {% endif %}
+
+        <a href="{% url 'main' %}" class="btn-submit">Вернуться в Поток</a>
+    </div>
 </body>
 </html>
