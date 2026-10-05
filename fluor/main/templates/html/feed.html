@@ -1,0 +1,28 @@
+<h1>Лента</h1>
+
+{% for post in posts %}
+
+    <article>
+        <h2>
+            <a href="{% url 'post' post.id %}">
+                {{ post.title }}
+            </a>
+        </h2>
+
+        <p>
+            Автор:
+            <a href="{% url 'profile' post.author.id %}">
+                {{ post.author.first_name }}
+            </a>
+        </p>
+
+        <p>{{ post.text }}</p>
+
+        <small>{{ post.created_at }}</small>
+    </article>
+
+{% empty %}
+
+    <p>Постов пока нет.</p>
+
+{% endfor %}

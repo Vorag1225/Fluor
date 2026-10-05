@@ -24,6 +24,7 @@ urlpatterns = [
     path('registration/', RegistrationUser.as_view(), name='registration'),
     path('login/', LoginUser.as_view(), name='login'),
     path('users/<id>',profile_view, name = 'profile'),
+    path('posts/<int:id>/', post_view, name='post'),    # Маршрут для поста
 ]
 
 handler404 = error_404_view

@@ -10,7 +10,22 @@ from .models import *
 
 # Create your views here.
 def main_view(request):
-    return HttpResponse("Пустышка")
+    posts = Post.objects.all().order_by('-created_at')
+
+    context = {
+        'posts': posts
+    }
+
+    return render(request, 'html/feed.html', context)
+
+def post_view(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    context = {
+        'post': post
+    }
+
+    return render(request, 'html/post.html', context)
 
 class RegistrationUser(CreateView):
     form_class = RegistrationForm
@@ -40,19 +55,28 @@ def logout_user(request):
     logout(request)
     return redirect('main')
 
-def profile_view(request,id):
+def profile_view(request, id):
     try:
         user = get_object_or_404(User, id=id)
+
         context = {
             'user': user
         }
-        return render(request, 'html/profile.html',context)
+
+        return render(request, 'html/profile.html', context)
+
     except ValueError:
         raise Http404("")
 
-def error_404_view(request,exception):
+def error_404_view(request, exception):
     context = {
-        'message':'Похоже, страница, которую вы ищете, не существует...',
-        'error_code':'404 - Not Found',
+        'message': 'Похоже, страница, которую вы ищете, не существует...',
+        'error_code': '404 - Not Found',
     }
-    return render(request,'html/error_page.html',status=404,context=context)
+
+    return render(
+        request,
+        'html/error_page.html',
+        status=404,
+        context=context
+    )

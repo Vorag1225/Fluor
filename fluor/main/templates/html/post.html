@@ -1,0 +1,18 @@
+<article>
+    <h1>{{ post.title }}</h1>
+
+    <p>
+        Автор:
+        <a href="{% url 'profile' post.author.id %}">
+            {{ post.author.first_name }}
+        </a>
+    </p>
+
+    <p>{{ post.text }}</p>
+
+    <small>{{ post.created_at }}</small>
+</article>
+
+<a href="{% url 'main' %}">
+    ← Назад в ленту
+</a>
