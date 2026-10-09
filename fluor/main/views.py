@@ -31,7 +31,7 @@ class RegistrationUser(CreateView):
     form_class = RegistrationForm
     template_name = 'html/registration.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регистрация'
         return context
@@ -46,7 +46,7 @@ class LoginUser(LoginView):
     form_class = LoginForm
     template_name = 'html/login.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Авторизация'
         return context
@@ -56,17 +56,12 @@ def logout_user(request):
     return redirect('main')
 
 def profile_view(request, id):
-    try:
-        user = get_object_or_404(User, id=id)
+    user = get_object_or_404(User, id=id)
+    context = {
+        'user': user
+    }
+    return render(request, 'html/profile.html', context)
 
-        context = {
-            'user': user
-        }
-
-        return render(request, 'html/profile.html', context)
-
-    except ValueError:
-        raise Http404("")
 
 def error_404_view(request, exception):
     context = {
