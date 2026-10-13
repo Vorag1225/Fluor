@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('registration/', RegistrationUser.as_view(), name='registration'),
     path('login/', LoginUser.as_view(), name='login'),
+    path('logout/',logout_user,name='logout'),
     path('users/<int:id>',profile_view, name = 'profile'),
     path('posts/<int:id>/', post_view, name='post'),    # Маршрут для поста
 ]
