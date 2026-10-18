@@ -3,15 +3,15 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 # Create your models here.
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=150, blank=True)
-    icon = models.ImageField(
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # привязка к пользователю
+    description = models.CharField(max_length=150, blank=True)  # описание профиля
+    icon = models.ImageField(                                   # заготовка для иконок пользователей
         upload_to='profile_icons/',
         blank=True,
         null=True
     )
 
-    def get_absolute_url(self):
+    def get_absolute_url(self): # в админке позволяет перейти на страницу профиля
         return reverse('profile', kwargs={'id': self.user.id})
 
 
