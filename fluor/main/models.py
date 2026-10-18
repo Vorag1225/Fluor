@@ -31,3 +31,26 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'id': self.id})
+
+class Vote(models.Model):
+    class Value(models.IntegerChoices):                       # Варианты голосов
+        UPVOTE = 1, "UP"
+        DOWNVOTE = -1, "DOWN"
+
+
+    post = models.ForeignKey( Post, on_delete=models.CASCADE) # К какому посту привязан
+    user = models.ForeignKey( User, on_delete=models.CASCADE) # К какому пользователю привязан
+    value = models.SmallIntegerField(choices=Value.choices)   # Какой голос выбрал(вверх или вниз)
+    created_at = models.DateTimeField(auto_now_add=True)      # Когда голос создан
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],                      # Органичивает создание нескольких голосов от
+                name='unique_vote'                            # одного пользователя к одному посту
+            ),
+            models.CheckConstraint(                           # Запрещает хранить недопустимые значения в поле
+                condition=models.Q(value__in=[1, -1]),        # на уровне БД
+                name="value_must_be_valid",
+            )
+        ]
