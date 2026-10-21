@@ -17,7 +17,7 @@ def main_view(request):
         'posts': posts
     }
 
-    return render(request, 'html/app.html', context)
+    return render(request, 'html/pages.html', context)
 
 def post_view(request, id):
     post = get_object_or_404(Post, id=id)
@@ -27,11 +27,11 @@ def post_view(request, id):
         'post': post
     }
 
-    return render(request, 'html/app.html', context)
+    return render(request, 'html/pages.html', context)
 
 class RegistrationUser(CreateView):
     form_class = RegistrationForm
-    template_name = 'html/app.html'
+    template_name = 'html/pages.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,7 +47,7 @@ class RegistrationUser(CreateView):
 
 class LoginUser(LoginView):
     form_class = LoginForm
-    template_name = 'html/app.html'
+    template_name = 'html/pages.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -70,7 +70,7 @@ def profile_view(request, id):
         'user': user,
         'posts': posts
     }
-    return render(request, 'html/app.html', context)
+    return render(request, 'html/pages.html', context)
 
 
 def error_404_view(request, exception):
@@ -82,7 +82,7 @@ def error_404_view(request, exception):
 
     return render(
         request,
-        'html/app.html',
+        'html/pages.html',
         status=404,
         context=context
     )
