@@ -13,27 +13,30 @@ def main_view(request):
     posts = Post.objects.all().order_by('-created_at')
 
     context = {
+        'current_page': 'feed',
         'posts': posts
     }
 
-    return render(request, 'html/feed.html', context)
+    return render(request, 'html/app.html', context)
 
 def post_view(request, id):
     post = get_object_or_404(Post, id=id)
 
     context = {
+        'current_page': 'post',
         'post': post
     }
 
-    return render(request, 'html/post.html', context)
+    return render(request, 'html/app.html', context)
 
 class RegistrationUser(CreateView):
     form_class = RegistrationForm
-    template_name = 'html/registration.html'
+    template_name = 'html/app.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Регистрация'
+        context['current_page'] = 'registration'
         return context
 
     def form_valid(self, form):
@@ -44,11 +47,12 @@ class RegistrationUser(CreateView):
 
 class LoginUser(LoginView):
     form_class = LoginForm
-    template_name = 'html/login.html'
+    template_name = 'html/app.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Авторизация'
+        context['current_page'] = 'login'
         return context
 
 def logout_user(request):
@@ -60,21 +64,25 @@ def logout_user(request):
 
 def profile_view(request, id):
     user = get_object_or_404(User, id=id)
+    posts = Post.objects.filter(author=user).order_by('-created_at')
     context = {
-        'user': user
+        'current_page': 'profile',
+        'user': user,
+        'posts': posts
     }
-    return render(request, 'html/profile.html', context)
+    return render(request, 'html/app.html', context)
 
 
 def error_404_view(request, exception):
     context = {
+        'current_page': 'error',
         'message': 'Похоже, страница, которую вы ищете, не существует...',
         'error_code': '404 - Not Found',
     }
 
     return render(
         request,
-        'html/error_page.html',
+        'html/app.html',
         status=404,
         context=context
     )

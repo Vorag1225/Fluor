@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Поток{% endblock %}</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 40px 20px;
+            color: #333333;
+        }
+
+        body.body--center {
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #4a90e2;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color .3s, transform .1s;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover { background-color: #357abd; }
+        .btn:active { transform: scale(0.98); }
+
+        .btn--inline {
+            display: inline-block;
+            width: auto;
+            margin-top: 25px;
+            padding: 12px 20px;
+            font-size: 15px;
+        }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333333;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .form-group.has-error .form-input {
+            border-color: #e74c3c;
+            background-color: #fff8f8;
+        }
+        .form-group.has-error .form-input:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+        .form-group.has-error label { color: #e74c3c; }
+
+        .alert-error {
+            background-color: #fdecea;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #e74c3c;
+            font-size: 14px;
+        }
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 5px 0 0 0;
+            color: #e74c3c;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .link-accent {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .3s;
+        }
+        .link-accent:hover { color: #357abd; text-decoration: underline; }
+
+        @media (max-width: 480px) {
+            body { padding: 20px 12px; }
+            .card { padding: 25px 20px; }
+        }
+
+        {% block extra_css %}{% endblock %}
+    </style>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+</body>
+</html>
