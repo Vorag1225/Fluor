@@ -1,27 +1,76 @@
-<!DOCTYPE html>
+{% load nav_tags %}<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Поток{% endblock %}</title>
+
+    {% if not user.is_authenticated and current_page == 'feed' %}
+    <meta http-equiv="refresh" content="0; url={% url 'login' %}?next={{ request.path|urlencode }}">
+    {% endif %}
+
     <style>
         * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f7f6;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page-main {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            min-height: 100vh;
-            margin: 0;
             padding: 40px 20px;
-            color: #333333;
+            width: 100%;
         }
 
-        body.body--center {
+        body.body--center .page-main {
             align-items: center;
             padding: 20px;
+        }
+
+        .navbar {
+            background-color: #ffffff;
+            border-bottom: 1px solid #eef1f4;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            width: 100%;
+        }
+
+        .navbar__list {
+            display: flex;
+            align-items: center;
+            justify-content: center;   /* ← выравнивание пунктов по центру */
+            gap: 4px;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0 auto;
+            padding: 0 20px;
+            max-width: 760px;
+            min-height: 56px;
+        }
+
+        .navbar__item a {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 6px;
+            color: #333333;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color .2s, color .2s;
+        }
+
+        .navbar__item a:hover {
+            background-color: #f0f5fb;
+            color: #4a90e2;
         }
 
         .card {
@@ -119,14 +168,39 @@
         .link-accent:hover { color: #357abd; text-decoration: underline; }
 
         @media (max-width: 480px) {
-            body { padding: 20px 12px; }
+            .page-main { padding: 20px 12px; }
             .card { padding: 25px 20px; }
+            .navbar__list { padding: 0 12px; }
         }
 
         {% block extra_css %}{% endblock %}
     </style>
 </head>
 <body class="{% block body_class %}{% endblock %}">
-    {% block content %}{% endblock %}
+
+    {% if current_page != 'login' and current_page != 'registration' %}
+    <nav class="navbar">
+        <ul class="navbar__list">
+            {% navpan request as panel %}
+            {% for item in panel %}
+                <li class="navbar__item">
+                    {% if item.url_path and item.url_query %}
+                        <a href="{% url item.url_name item.url_path %}?{{ item.url_query }}">{{ item.title }}</a>
+                    {% elif item.url_path %}
+                        <a href="{% url item.url_name item.url_path %}">{{ item.title }}</a>
+                    {% elif item.url_query %}
+                        <a href="{% url item.url_name %}?{{ item.url_query }}">{{ item.title }}</a>
+                    {% else %}
+                        <a href="{% url item.url_name %}">{{ item.title }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    <main class="page-main">
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>
