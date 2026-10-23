@@ -121,6 +121,36 @@
             <small class="post-date">{{ post.created_at }}</small>
         </article>
 
+        <!-- ===== Комментарии ===== -->
+        <section id="comments">
+            <h2>Комментарии ({{ comments|length }})</h2>
+
+            {% for comment in comments %}
+                <div>
+                    <p>
+                        <b><a href="{% url 'profile' comment.author.id %}">{{ comment.author.first_name }}</a></b>
+                        <small>{{ comment.created_at }}</small>
+                    </p>
+                    <p>{{ comment.text|linebreaksbr }}</p>
+                    <hr>
+                </div>
+            {% empty %}
+                <p>Комментариев пока нет.</p>
+            {% endfor %}
+
+            {% if user.is_authenticated %}
+                <form method="post" action="{% url 'post' post.id %}">
+                    {% csrf_token %}
+                    {{ comment_form.text }}
+                    {{ comment_form.text.errors }}
+                    <br>
+                    <button type="submit">Отправить</button>
+                </form>
+            {% else %}
+                <p><a href="{% url 'login' %}?next={{ request.path }}">Войдите</a>, чтобы оставить комментарий.</p>
+            {% endif %}
+        </section>
+
         <a class="btn-back" href="{% url 'main' %}">
             ← Назад в ленту
         </a>

@@ -31,3 +31,25 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'id': self.id})
+
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(                               # К какому посту относится комментарий
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    author = models.ForeignKey(                             # Автор комментария
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments'
+    )
+    text = models.TextField()                               # Текст комментария
+    created_at = models.DateTimeField(auto_now_add=True)    # Когда был создан комментарий
+
+    class Meta:
+        ordering = ['created_at']                           # Старые сверху, новые снизу
+
+    def __str__(self):
+        return f'{self.author} → {self.post}: {self.text[:30]}'

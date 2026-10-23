@@ -1,10 +1,12 @@
 from django.http import HttpResponse,Http404
 from django.shortcuts import render,redirect,get_object_or_404
+from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from .forms import *
 from .models import *
 
@@ -21,11 +23,42 @@ def main_view(request):
 def post_view(request, id):
     post = get_object_or_404(Post, id=id)
 
+    if request.method == 'POST':
+        # Комментировать могут только авторизованные пользователи
+        if not request.user.is_authenticated:
+            return redirect(f"{reverse('login')}?next={request.path}")
+
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post', id=post.id)     # Redirect после POST, чтобы не было повторной отправки при F5
+    else:
+        comment_form = CommentForm()
+
     context = {
-        'post': post
+        'post': post,
+        'comments': post.comments.select_related('author'),
+        'comment_form': comment_form,
     }
 
     return render(request, 'html/post.html', context)
+
+@login_required
+def create_post_view(request):
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user              # Автор берётся из сессии, а не из формы
+            post.save()
+            return redirect('post', id=post.id)
+    else:
+        form = PostForm()
+
+    return render(request, 'html/create_post.html', {'form': form})
 
 class RegistrationUser(CreateView):
     form_class = RegistrationForm

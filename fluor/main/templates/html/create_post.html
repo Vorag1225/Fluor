@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Создать пост</title>
+</head>
+<body>
+    <h1>Создать пост</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <p>
+            {{ form.title.label_tag }}<br>
+            {{ form.title }}
+            {{ form.title.errors }}
+        </p>
+
+        <p>
+            {{ form.text.label_tag }}<br>
+            {{ form.text }}
+            {{ form.text.errors }}
+        </p>
+
+        <button type="submit">Опубликовать</button>
+    </form>
+
+    <p><a href="{% url 'main' %}">← Назад в ленту</a></p>
+</body>
+</html>

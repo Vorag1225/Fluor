@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import *
 from django import forms
+from .models import Post, Comment
 
 
 class RegistrationForm(UserCreationForm):
@@ -15,3 +16,20 @@ class RegistrationForm(UserCreationForm):
 class LoginForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+
+class PostForm(forms.ModelForm):
+    title = forms.CharField(label='Заголовок', max_length=200)
+    text = forms.CharField(label='Текст', widget=forms.Textarea)
+
+    class Meta:
+        model = Post
+        fields = ('title', 'text')
+
+
+class CommentForm(forms.ModelForm):
+    text = forms.CharField(label='Комментарий', widget=forms.Textarea)
+
+    class Meta:
+        model = Comment
+        fields = ('text',)

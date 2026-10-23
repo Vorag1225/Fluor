@@ -131,3 +131,4 @@ MAILERS = {
 }
 
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'login'    # Куда отправлять неавторизованных (для @login_required)
