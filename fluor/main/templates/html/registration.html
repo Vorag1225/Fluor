@@ -1,0 +1,47 @@
+{% extends 'html/main_base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body_class %}page-auth body--center{% endblock %}
+
+{% block content %}
+<div class="card auth-card">
+    <h2>{{ title }}</h2>
+
+    <form method="post" action="" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert-error">
+                <ul class="errorlist">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% if form %}
+            <button type="submit" class="btn">Зарегистрироваться</button>
+        {% else %}
+            <a href="{% url 'registration' %}" class="btn">Зарегистрироваться</a>
+        {% endif %}
+        <p class="auth-link">Уже зарегистрированы? <a href="{% url 'login' %}">Войти</a></p>
+    </form>
+</div>
+{% endblock %}

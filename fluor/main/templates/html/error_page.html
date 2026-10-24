@@ -1,0 +1,21 @@
+{% extends 'html/main_base.html' %}
+
+{% block title %}Ошибка{% endblock %}
+
+{% block body_class %}page-error body--center{% endblock %}
+
+{% block content %}
+<div class="card error-card">
+    <h1>Ой...</h1>
+
+    {% if message %}
+        <div class="error-message">{{ message }}</div>
+    {% endif %}
+
+    {% if error_code %}
+        <div class="error-code">{{ error_code }}</div>
+    {% endif %}
+
+    <a href="{% url 'main' %}" class="btn">Вернуться в Поток</a>
+</div>
+{% endblock %}

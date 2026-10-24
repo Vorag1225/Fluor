@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse,Http404
 from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
@@ -9,6 +10,7 @@ from .forms import *
 from .models import *
 
 # Create your views here.
+@login_required
 def main_view(request):
     posts = Post.objects.all().order_by('-created_at')
 
@@ -17,8 +19,9 @@ def main_view(request):
         'posts': posts
     }
 
-    return render(request, 'html/pages.html', context)
+    return render(request, 'html/feed.html', context)
 
+@login_required
 def post_view(request, id):
     post = get_object_or_404(Post, id=id)
 
@@ -27,11 +30,11 @@ def post_view(request, id):
         'post': post
     }
 
-    return render(request, 'html/pages.html', context)
+    return render(request, 'html/post.html', context)
 
 class RegistrationUser(CreateView):
     form_class = RegistrationForm
-    template_name = 'html/pages.html'
+    template_name = 'html/registration.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -47,7 +50,8 @@ class RegistrationUser(CreateView):
 
 class LoginUser(LoginView):
     form_class = LoginForm
-    template_name = 'html/pages.html'
+    template_name = 'html/login.html'
+    redirect_authenticated_user = True
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,11 +61,9 @@ class LoginUser(LoginView):
 
 def logout_user(request):
     logout(request)
-    next_page = request.GET.get('next')
-    if not next_page:
-        next_page = '/'
-    return redirect(next_page)
+    return redirect('login')
 
+@login_required
 def profile_view(request, id):
     user = get_object_or_404(User, id=id)
     posts = Post.objects.filter(author=user).order_by('-created_at')
@@ -70,8 +72,7 @@ def profile_view(request, id):
         'user': user,
         'posts': posts
     }
-    return render(request, 'html/pages.html', context)
-
+    return render(request, 'html/profile.html', context)
 
 def error_404_view(request, exception):
     context = {
@@ -82,7 +83,7 @@ def error_404_view(request, exception):
 
     return render(
         request,
-        'html/pages.html',
+        'html/error_page.html',
         status=404,
         context=context
     )

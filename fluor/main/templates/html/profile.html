@@ -1,0 +1,57 @@
+{% extends 'html/main_base.html' %}
+
+{% block title %}{{ user.first_name }}{% endblock %}
+
+{% block body_class %}page-profile{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+    <div class="card profile-card">
+        <div class="profile-head">
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="Аватар" class="avatar">
+            {% else %}
+                <div class="avatar">
+                    {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+                </div>
+            {% endif %}
+
+            <div>
+                <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>О себе</h2>
+            {% if user.profile.description %}
+                <p class="description">{{ user.profile.description }}</p>
+            {% else %}
+                <p class="empty">Тут пустовато...</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h1 class="feed-title">Посты</h1>
+
+    {% for post in posts %}
+        <article class="card post-card">
+            <h2>
+                <a href="{% url 'post' post.id %}">{{ post.title }}</a>
+            </h2>
+
+            <p class="post-meta">
+                <span class="author-label">Автор:</span>
+                <a href="{% url 'profile' post.author.id %}">{{ post.author.first_name }}</a>
+            </p>
+
+            <p class="post-text">{{ post.text }}</p>
+
+            <small class="post-date">{{ post.created_at }}</small>
+        </article>
+    {% empty %}
+        <div class="card empty">
+            <p>Постов пока нет.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

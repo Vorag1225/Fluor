@@ -1,0 +1,24 @@
+{% extends 'html/main_base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block body_class %}page-post{% endblock %}
+
+{% block content %}
+<div class="post-wrapper">
+    <article class="card post-card">
+        <h1>{{ post.title }}</h1>
+
+        <p class="post-meta">
+            <span class="author-label">Автор:</span>
+            <a href="{% url 'profile' post.author.id %}">{{ post.author.first_name }}</a>
+        </p>
+
+        <p class="post-text">{{ post.text }}</p>
+
+        <small class="post-date">{{ post.created_at }}</small>
+    </article>
+
+    <a class="btn btn--inline" href="{% url 'main' %}">← Назад в ленту</a>
+</div>
+{% endblock %}
