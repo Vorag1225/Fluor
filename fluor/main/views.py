@@ -57,7 +57,10 @@ class LoginUser(LoginView):
 
 def logout_user(request):
     logout(request)
-    return redirect('main')
+    next_page = request.GET.get('next')
+    if not next_page:
+        next_page = '/'
+    return redirect(next_page)
 
 def profile_view(request, id):
     user = get_object_or_404(User, id=id)
