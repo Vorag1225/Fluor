@@ -357,10 +357,47 @@
             text-decoration: underline;
         }
 
+        .create-post-form input[type="text"],
+        .create-post-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            color: #333333;
+            transition: border-color .3s, box-shadow .3s;
+        }
+        .create-post-form input[type="text"]:focus,
+        .create-post-form textarea:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .create-post-form textarea {
+            min-height: 160px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        .create-post-form .form-group.has-error input,
+        .create-post-form .form-group.has-error textarea {
+            border-color: #e74c3c;
+            background-color: #fff8f8;
+        }
+        .create-post-form .form-group.has-error input:focus,
+        .create-post-form .form-group.has-error textarea:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        }
+        .create-post-form .btn { margin-top: 10px; }
+
         @media (max-width: 480px) {
             .post-card h1, .post-card h2, .feed-title { font-size: 22px; }
             .page-profile .profile-head { flex-direction: column; text-align: center; }
             .page-profile .profile-head h1 { font-size: 20px; }
+
+            .create-post-form input[type="text"],
+            .create-post-form textarea { font-size: 15px; }
         }
         {% endblock %}
     </style>

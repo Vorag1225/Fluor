@@ -1,32 +1,42 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Создать пост</title>
-</head>
-<body>
-    <h1>Создать пост</h1>
+{% extends "html/main_base.html" %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Создать пост — Поток{% endblock %}
+{% block body_class %}page-create-post{% endblock %}
 
-        {{ form.non_field_errors }}
+{% block content %}
+<div class="post-wrapper">
+    <div class="card">
+        <h1 class="feed-title">Создать пост</h1>
 
-        <p>
-            {{ form.title.label_tag }}<br>
-            {{ form.title }}
-            {{ form.title.errors }}
-        </p>
+        <form method="post" class="create-post-form" novalidate>
+            {% csrf_token %}
 
-        <p>
-            {{ form.text.label_tag }}<br>
-            {{ form.text }}
-            {{ form.text.errors }}
-        </p>
+            {% if form.non_field_errors %}
+                <div class="alert-error">{{ form.non_field_errors }}</div>
+            {% endif %}
 
-        <button type="submit">Опубликовать</button>
-    </form>
+            <div class="form-group{% if form.title.errors %} has-error{% endif %}">
+                <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                {{ form.title }}
+                {% if form.title.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.title.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
 
-    <p><a href="{% url 'main' %}">← Назад в ленту</a></p>
-</body>
-</html>
+            <div class="form-group{% if form.text.errors %} has-error{% endif %}">
+                <label for="{{ form.text.id_for_label }}">{{ form.text.label }}</label>
+                {{ form.text }}
+                {% if form.text.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.text.errors %}<li>{{ error }}</li>{% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn">Опубликовать</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

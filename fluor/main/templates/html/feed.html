@@ -8,12 +8,6 @@
 <div class="feed-wrapper">
     <h1 class="feed-title">Поток</h1>
 
-    {% if user.is_authenticated %}
-        <p><a href="{% url 'create_post' %}">+ Создать пост</a></p>
-    {% else %}
-        <p><a href="{% url 'login' %}">Войдите</a>, чтобы создать пост.</p>
-    {% endif %}
-
     {% for post in posts %}
         <article class="card post-card">
             <h2>
