@@ -15,6 +15,12 @@ def navpan(request):
                 'url_query': None,
              })
         panel.append({
+            'title': 'Создать пост',
+            'url_name': 'create_post',
+            'url_path': None,
+            'url_query': None,
+        })
+        panel.append({
             'title': 'Профиль',
             'url_name': 'profile',
             'url_path': request.user.id,
