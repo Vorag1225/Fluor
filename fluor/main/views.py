@@ -22,6 +22,7 @@ def main_view(request):
 
 def post_view(request, id):
     post = get_object_or_404(Post, id=id)
+    comments = Comment.objects.filter(post=post).order_by('created_at')
 
     if request.method == 'POST':
         # Комментировать могут только авторизованные пользователи
@@ -39,7 +40,9 @@ def post_view(request, id):
         comment_form = CommentForm()
 
     context = {
-        'post': post
+        'post': post,
+        'comments': comments,
+        'comment_form': comment_form,
     }
 
     return render(request, 'html/post.html', context)
