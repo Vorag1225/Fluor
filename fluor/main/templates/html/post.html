@@ -19,24 +19,6 @@
         <small class="post-date">{{ post.created_at }}</small>
     </article>
 
-    <section id="comments" class="card" style="margin-top: 20px;">
-        <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 22px;">Комментарии ({{ comments|length }})</h2>
-
-        <div class="comments-list">
-            {% for comment in comments %}
-                <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eef1f4;">
-                    <p class="post-meta" style="margin-bottom: 10px;">
-                        <b><a href="{% url 'profile' comment.author.id %}">{{ comment.author.first_name }}</a></b>
-                        <small class="post-date" style="border: none; padding: 0;">{{ comment.created_at }}</small>
-                    </p>
-                    <p class="post-text" style="margin-bottom: 0;">{{ comment.text|linebreaksbr }}</p>
-                </div>
-            {% empty %}
-                <p class="empty" style="padding: 10px 0;">Комментариев пока нет. Будьте первым!</p>
-            {% endfor %}
-        </div>
-    </section>
-
     {% if user.is_authenticated %}
         <div class="card" style="margin-top: 20px;">
             <h1 class="feed-title">Оставить комментарий</h1>
@@ -61,6 +43,27 @@
                 <button type="submit" class="btn">Отправить</button>
             </form>
         </div>
+    {% endif %}
+
+    <section id="comments" class="card" style="margin-top: 20px;">
+        <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 22px;">Комментарии ({{ comments|length }})</h2>
+
+        <div class="comments-list">
+            {% for comment in comments %}
+                <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eef1f4;">
+                    <p class="post-meta" style="margin-bottom: 10px;">
+                        <b><a href="{% url 'profile' comment.author.id %}">{{ comment.author.first_name }}</a></b>
+                        <small class="post-date" style="border: none; padding: 0;">{{ comment.created_at }}</small>
+                    </p>
+                    <p class="post-text" style="margin-bottom: 0;">{{ comment.text|linebreaksbr }}</p>
+                </div>
+            {% empty %}
+                <p class="empty" style="padding: 10px 0;">Комментариев пока нет. Будьте первым!</p>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if not user.is_authenticated %}
         <div class="card" style="margin-top: 20px; text-align: center;">
             <p><a class="link-accent" href="{% url 'login' %}?next={{ request.path }}">Войдите</a>, чтобы оставить комментарий.</p>
         </div>
