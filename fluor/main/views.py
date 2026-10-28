@@ -13,7 +13,7 @@ import json
 
 # Create your views here.
 def main_view(request):
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.get_user_vote(request.user).all().order_by('-created_at')
 
     context = {
         'posts': posts
@@ -22,8 +22,7 @@ def main_view(request):
     return render(request, 'html/feed.html', context)
 
 def post_view(request, id):
-    post = get_object_or_404(Post, id=id)
-
+    post = get_object_or_404(Post.objects.get_user_vote(request.user), id=id)
     context = {
         'post': post
     }
@@ -63,8 +62,10 @@ def logout_user(request):
 
 def profile_view(request, id):
     user = get_object_or_404(User, id=id)
+    user_posts = Post.objects.get_user_vote(request.user).filter(author_id=id).all().order_by('-created_at')
     context = {
-        'user': user
+        'user': user,
+        'posts': user_posts
     }
     return render(request, 'html/profile.html', context)
 
