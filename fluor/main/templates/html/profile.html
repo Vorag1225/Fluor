@@ -46,7 +46,24 @@
 
             <p class="post-text">{{ post.text }}</p>
 
-            <small class="post-date">{{ post.created_at }}</small>
+            <div style="display: flex; align-items: center; gap: 15px; border-top: 1px solid #eeeeee; padding-top: 15px; flex-wrap: wrap;">
+
+                <div class="vote-pill" data-post-id="{{ post.id }}">
+                    <button class="vote-btn vote-up {% if post.user_vote|add:'0' == 1 %}active{% endif %}" data-value="1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                    </button>
+                    <span class="vote-score">{{ post.score }}</span>
+                    <button class="vote-btn vote-down {% if post.user_vote|add:'0' == -1 %}active{% endif %}" data-value="-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+
+                <a href="{% url 'post' post.id %}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
+                    Комментарии ({{ post.comments_count }})
+                </a>
+
+                <small class="post-date" style="border: none; padding: 0; margin-left: auto;">{{ post.created_at }}</small>
+            </div>
         </article>
     {% empty %}
         <div class="card empty">

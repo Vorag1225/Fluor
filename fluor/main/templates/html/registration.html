@@ -1,47 +1,37 @@
-{% extends 'html/main_base.html' %}
+{% extends "html/main_base.html" %}
 
-{% block title %}{{ title }}{% endblock %}
-
-{% block body_class %}page-auth body--center{% endblock %}
+{% block title %}Регистрация{% endblock %}
+{% block body_class %}page-auth{% endblock %}
 
 {% block content %}
 <div class="card auth-card">
-    <h2>{{ title }}</h2>
+    <h2>Регистрация</h2>
 
-    <form method="post" action="" novalidate>
+    <form method="post" class="create-post-form" novalidate>
         {% csrf_token %}
 
         {% if form.non_field_errors %}
-            <div class="alert-error">
-                <ul class="errorlist">
-                    {% for error in form.non_field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <div class="alert-error">{{ form.non_field_errors }}</div>
         {% endif %}
 
         {% for field in form %}
             <div class="form-group{% if field.errors %} has-error{% endif %}">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
-
                 {% if field.errors %}
                     <ul class="errorlist">
-                        {% for error in field.errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
+                        {% for error in field.errors %}<li>{{ error }}</li>{% endfor %}
                     </ul>
                 {% endif %}
             </div>
         {% endfor %}
 
-        {% if form %}
-            <button type="submit" class="btn">Зарегистрироваться</button>
-        {% else %}
-            <a href="{% url 'registration' %}" class="btn">Зарегистрироваться</a>
-        {% endif %}
-        <p class="auth-link">Уже зарегистрированы? <a href="{% url 'login' %}">Войти</a></p>
+        <button type="submit" class="btn" style="margin-top: 10px;">Зарегистрироваться</button>
     </form>
+
+    <p class="auth-link">
+        Уже зарегистрированы?
+        <a href="{% url 'login' %}?next={{ request.GET.next|default:request.path }}">Войти</a>
+    </p>
 </div>
 {% endblock %}
