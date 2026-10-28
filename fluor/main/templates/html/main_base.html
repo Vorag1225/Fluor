@@ -28,10 +28,7 @@
             width: 100%;
         }
 
-        body.body--center .page-main {
-            align-items: center;
-            padding: 20px;
-        }
+        body.body--center .page-main { align-items: center; padding: 20px; }
 
         .navbar {
             background-color: #ffffff;
@@ -41,127 +38,102 @@
         }
 
         .navbar__list {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            flex-wrap: wrap;
-            list-style: none;
-            margin: 0 auto;
-            padding: 0 20px;
-            max-width: 760px;
-            min-height: 56px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 4px; flex-wrap: wrap; list-style: none;
+            margin: 0 auto; padding: 0 20px; max-width: 760px; min-height: 56px;
         }
 
         .navbar__item a {
-            display: inline-block;
-            padding: 8px 14px;
-            border-radius: 6px;
-            color: #333333;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 500;
+            display: inline-block; padding: 8px 14px; border-radius: 6px;
+            color: #333333; text-decoration: none; font-size: 15px; font-weight: 500;
             transition: background-color .2s, color .2s;
         }
 
-        .navbar__item a:hover {
-            background-color: #f0f5fb;
-            color: #4a90e2;
-        }
+        .navbar__item a:hover { background-color: #f0f5fb; color: #4a90e2; }
 
         .card {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-            width: 100%;
+            background-color: #ffffff; padding: 40px; border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); width: 100%;
         }
 
         .btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background-color: #4a90e2;
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color .3s, transform .1s;
-            text-decoration: none;
-            text-align: center;
+            display: block; width: 100%; padding: 14px; background-color: #4a90e2;
+            color: #ffffff; border: none; border-radius: 8px; font-size: 16px;
+            font-weight: bold; cursor: pointer; transition: background-color .3s, transform .1s;
+            text-decoration: none; text-align: center;
         }
         .btn:hover { background-color: #357abd; }
         .btn:active { transform: scale(0.98); }
-
-        .btn--inline {
-            display: inline-block;
-            width: auto;
-            margin-top: 25px;
-            padding: 12px 20px;
-            font-size: 15px;
-        }
+        .btn--inline { display: inline-block; width: auto; margin-top: 25px; padding: 12px 20px; font-size: 15px; }
 
         .form-group { margin-bottom: 15px; text-align: left; }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #333333;
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #cccccc;
-            border-radius: 8px;
-            font-size: 16px;
+        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; color: #333333; font-weight: 500; }
+        .form-input, .create-post-form input[type="text"], .create-post-form textarea {
+            width: 100%; padding: 12px 15px; border: 1px solid #cccccc;
+            border-radius: 8px; font-size: 16px; font-family: inherit;
             transition: border-color .3s, box-shadow .3s;
         }
-        .form-input:focus {
-            outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        .form-input:focus, .create-post-form input[type="text"]:focus, .create-post-form textarea:focus {
+            outline: none; border-color: #4a90e2; box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         }
-        .form-group.has-error .form-input {
-            border-color: #e74c3c;
-            background-color: #fff8f8;
-        }
-        .form-group.has-error .form-input:focus {
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+        .form-group.has-error .form-input, .create-post-form .form-group.has-error input, .create-post-form .form-group.has-error textarea {
+            border-color: #e74c3c; background-color: #fff8f8;
         }
         .form-group.has-error label { color: #e74c3c; }
 
         .alert-error {
-            background-color: #fdecea;
-            border: 1px solid #f5c6cb;
-            border-radius: 8px;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #e74c3c;
-            font-size: 14px;
+            background-color: #fdecea; border: 1px solid #f5c6cb;
+            border-radius: 8px; padding: 12px 15px; margin-bottom: 20px;
+            text-align: center; color: #e74c3c; font-size: 14px;
         }
-        .errorlist {
-            list-style: none;
-            padding: 0;
-            margin: 5px 0 0 0;
-            color: #e74c3c;
-            font-size: 13px;
-            text-align: left;
+        .errorlist { list-style: none; padding: 0; margin: 5px 0 0 0; color: #e74c3c; font-size: 13px; text-align: left; }
+
+        .link-accent { color: #4a90e2; text-decoration: none; font-weight: 600; transition: color .3s; }
+        .link-accent:hover { color: #357abd; text-decoration: underline; }
+
+        .vote-pill {
+            display: inline-flex;
+            align-items: center;
+            background-color: #2A3236;
+            border-radius: 20px;
+            padding: 4px 10px;
+            gap: 6px;
+            vertical-align: middle;
+        }
+        .vote-btn {
+            background: none; border: none; cursor: pointer; padding: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: #d7dadc; opacity: 0.7;
+            transition: opacity 0.2s, color 0.2s;
+        }
+        .vote-btn:hover { opacity: 1; color: #ffffff; }
+        .vote-btn.vote-up.active { color: #ff4500; opacity: 1; }   /* Оранжевый за */
+        .vote-btn.vote-down.active { color: #7193ff; opacity: 1; } /* Синий против */
+
+        .vote-score {
+            font-size: 14px; font-weight: 700; color: #ffffff;
+            margin: 0 2px; min-width: 12px; text-align: center;
         }
 
-        .link-accent {
-            color: #4a90e2;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color .3s;
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); z-index: 1000;
+            justify-content: center; align-items: center;
         }
-        .link-accent:hover { color: #357abd; text-decoration: underline; }
+        .modal-content {
+            background: #fff; padding: 30px; border-radius: 12px;
+            max-width: 400px; width: 90%; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .modal-close {
+            position: absolute; top: 10px; right: 15px; background: none;
+            border: none; font-size: 24px; cursor: pointer; color: #999;
+        }
+        .modal-content h3 { margin-top: 0; color: #333; }
+        .modal-content p { color: #666; margin-bottom: 20px; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .modal-buttons .btn { width: auto; padding: 10px 20px; font-size: 14px; }
 
         @media (max-width: 480px) {
             .page-main { padding: 20px 12px; }
@@ -170,240 +142,40 @@
         }
 
         {% block extra_css %}
-        .feed-wrapper, .post-wrapper, .profile-wrapper {
-            width: 100%;
-            max-width: 720px;
-        }
-
-        .feed-title {
-            margin: 0 0 20px 0;
-            font-size: 28px;
-            line-height: 1.3;
-            color: #333333;
-            text-align: left;
-        }
-
+        .feed-wrapper, .post-wrapper, .profile-wrapper { width: 100%; max-width: 720px; }
+        .feed-title { margin: 0 0 20px 0; font-size: 28px; line-height: 1.3; color: #333333; text-align: left; }
         .post-card { margin-bottom: 20px; }
-
-        .post-card h1, .post-card h2 {
-            margin: 0 0 20px 0;
-            font-size: 28px;
-            line-height: 1.3;
-            color: #333333;
-            text-align: left;
-        }
-        .post-card h2 a {
-            color: inherit;
-            text-decoration: none;
-            transition: color .3s;
-        }
+        .post-card h1, .post-card h2 { margin: 0 0 15px 0; font-size: 24px; line-height: 1.3; color: #333333; text-align: left; }
+        .post-card h2 a { color: inherit; text-decoration: none; transition: color .3s; }
         .post-card h2 a:hover { color: #4a90e2; }
-
-        .post-meta {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 0 0 20px 0;
-            font-size: 14px;
-            color: #666666;
-        }
+        .post-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 0 0 15px 0; font-size: 14px; color: #666666; }
         .post-meta .author-label { color: #999999; }
-        .post-meta a {
-            color: #4a90e2;
-            text-decoration: none;
-            font-weight: 600;
-            transition: color .3s;
-        }
+        .post-meta a { color: #4a90e2; text-decoration: none; font-weight: 600; transition: color .3s; }
         .post-meta a:hover { color: #357abd; text-decoration: underline; }
-
-        .post-text {
-            margin: 0 0 25px 0;
-            font-size: 16px;
-            line-height: 1.6;
-            color: #333333;
-            white-space: pre-line;
-            word-wrap: break-word;
-        }
-
-        .post-date {
-            display: block;
-            font-size: 13px;
-            color: #999999;
-            border-top: 1px solid #eeeeee;
-            padding-top: 15px;
-        }
-
+        .post-text { margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333333; white-space: pre-line; word-wrap: break-word; }
+        .post-date { display: block; font-size: 13px; color: #999999; border-top: 1px solid #eeeeee; padding-top: 15px; }
         .empty { text-align: center; color: #777777; }
         .empty p { margin: 0; font-size: 16px; }
 
         .page-profile .profile-card { margin-bottom: 30px; }
-
-        .page-profile .profile-head {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #eef1f4;
-        }
-
-        .page-profile .avatar {
-            flex-shrink: 0;
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            background-color: #4a90e2;
-            color: #ffffff;
-            font-size: 26px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-transform: uppercase;
-            user-select: none;
-            object-fit: cover;
-        }
-
-        .page-profile .profile-head h1 {
-            margin: 0 0 4px 0;
-            font-size: 22px;
-            color: #333333;
-        }
-
+        .page-profile .profile-head { display: flex; align-items: center; gap: 18px; padding-bottom: 25px; border-bottom: 1px solid #eef1f4; }
+        .page-profile .avatar { flex-shrink: 0; width: 72px; height: 72px; border-radius: 50%; background-color: #4a90e2; color: #ffffff; font-size: 26px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-transform: uppercase; user-select: none; object-fit: cover; }
+        .page-profile .profile-head h1 { margin: 0 0 4px 0; font-size: 22px; color: #333333; }
         .page-profile .section { margin-top: 28px; }
-        .page-profile .section h2 {
-            margin: 0 0 12px 0;
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            color: #000000;
-        }
+        .page-profile .section h2 { margin: 0 0 12px 0; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: #000000; }
+        .page-profile .description { margin: 0; font-size: 15px; line-height: 1.6; color: #000000; white-space: pre-line; }
+        .page-profile .empty { margin: 0; padding: 20px; border: 1px dashed #d5dde5; border-radius: 8px; background-color: #fafcfd; color: #000000; font-size: 14px; font-style: italic; text-align: center; }
 
-        .page-profile .description {
-            margin: 0;
-            font-size: 15px;
-            line-height: 1.6;
-            color: #000000;
-            white-space: pre-line;
-        }
-
-        .page-profile .empty {
-            margin: 0;
-            padding: 20px;
-            border: 1px dashed #d5dde5;
-            border-radius: 8px;
-            background-color: #fafcfd;
-            color: #000000;
-            font-size: 14px;
-            font-style: italic;
-            text-align: center;
-        }
-
-        .page-error .error-card { max-width: 440px; text-align: center; }
-
-        .page-error .error-card h1 {
-            margin: 0 0 20px 0;
-            font-size: 26px;
-            color: #333333;
-        }
-
-        .page-error .error-message {
-            background-color: #fdecea;
-            border: 1px solid #f5c6cb;
-            border-radius: 8px;
-            padding: 14px 18px;
-            margin-bottom: 20px;
-            color: #e74c3c;
-            font-size: 15px;
-            line-height: 1.5;
-            word-wrap: break-word;
-        }
-
-        .page-error .error-code {
-            display: inline-block;
-            font-size: 14px;
-            color: #000000;
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
-        }
-
-        .page-auth .auth-card {
-            max-width: 400px;
-            text-align: center;
-        }
-
-        .page-auth .auth-card h2 {
-            margin: 0 0 25px 0;
-            font-size: 24px;
-            color: #333333;
-        }
-
-        .page-auth .auth-link {
-            margin-top: 25px;
-            font-size: 14px;
-            color: #666666;
-        }
-
-        .page-auth .auth-link a {
-            color: #4a90e2;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color .3s;
-        }
-
-        .page-auth .auth-link a:hover {
-            color: #357abd;
-            text-decoration: underline;
-        }
-
-        .create-post-form input[type="text"],
-        .create-post-form textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #cccccc;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            color: #333333;
-            transition: border-color .3s, box-shadow .3s;
-        }
-        .create-post-form input[type="text"]:focus,
-        .create-post-form textarea:focus {
-            outline: none;
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-        }
-        .create-post-form textarea {
-            min-height: 160px;
-            resize: vertical;
-            line-height: 1.6;
-        }
-        .create-post-form .form-group.has-error input,
-        .create-post-form .form-group.has-error textarea {
-            border-color: #e74c3c;
-            background-color: #fff8f8;
-        }
-        .create-post-form .form-group.has-error input:focus,
-        .create-post-form .form-group.has-error textarea:focus {
-            border-color: #e74c3c;
-            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
-        }
+        .create-post-form textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
         .create-post-form .btn { margin-top: 10px; }
 
-        .page-post .create-post-form textarea {
-            height: 100px;
-            min-height: 100px;
-            resize: none;
-        }
+        .page-post .create-post-form textarea { height: 100px; min-height: 100px; resize: none; }
 
         @media (max-width: 480px) {
             .post-card h1, .post-card h2, .feed-title { font-size: 22px; }
             .page-profile .profile-head { flex-direction: column; text-align: center; }
             .page-profile .profile-head h1 { font-size: 20px; }
-
-            .create-post-form input[type="text"],
-            .create-post-form textarea { font-size: 15px; }
+            .create-post-form input[type="text"], .create-post-form textarea { font-size: 15px; }
         }
         {% endblock %}
     </style>
@@ -434,5 +206,107 @@
     <main class="page-main">
         {% block content %}{% endblock %}
     </main>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('auth-modal')">&times;</button>
+            <h3>Требуется вход</h3>
+            <p>Голосовать могут только авторизованные пользователи.</p>
+            <div class="modal-buttons">
+                <a href="{% url 'login' %}?next={{ request.path }}" class="btn">Войти</a>
+                <a href="{% url 'registration' %}" class="btn" style="background-color: #6c757d;">Регистрация</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('error-modal')">&times;</button>
+            <h3 style="color: #e74c3c;">Ошибка</h3>
+            <p id="error-message-text">Что-то пошло не так...</p>
+            <button class="btn" onclick="closeModal('error-modal')" style="width: 100px; margin: 0 auto;">ОК</button>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrftoken = getCookie('csrftoken');
+        const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+
+        function showModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const voteButtons = document.querySelectorAll('.vote-btn');
+
+            voteButtons.forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+
+                    if (!isAuthenticated) {
+                        showModal('auth-modal');
+                        return;
+                    }
+
+                    const votePill = btn.closest('.vote-pill');
+                    const postId = votePill.dataset.postId;
+                    const value = parseInt(btn.dataset.value);
+
+                    try {
+                        const response = await fetch(`/api/posts/${postId}/vote/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': csrftoken
+                            },
+                            body: JSON.stringify({ value: value })
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            document.getElementById('error-message-text').innerText = data.error || 'Неизвестная ошибка';
+                            showModal('error-modal');
+                            return;
+                        }
+
+                        votePill.querySelector('.vote-score').innerText = data.score;
+
+                        const upBtn = votePill.querySelector('.vote-up');
+                        const downBtn = votePill.querySelector('.vote-down');
+
+                        upBtn.classList.remove('active');
+                        downBtn.classList.remove('active');
+
+                        if (data.value === 1) upBtn.classList.add('active');
+                        else if (data.value === -1) downBtn.classList.add('active');
+
+                    } catch (err) {
+                        document.getElementById('error-message-text').innerText = 'Ошибка сети. Проверьте подключение.';
+                        showModal('error-modal');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
