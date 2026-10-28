@@ -17,20 +17,21 @@ class Profile(models.Model):
 
 class PostManager(models.Manager):
     def get_queryset(self):
+        vote_sum = (
+            VotePost.objects.filter(post_id=models.OuterRef('pk')).values('post_id').annotate(total=models.Sum('value'))
+            .values('total')
+        )
         return super().get_queryset().annotate(
             score=Coalesce(
-                models.Sum('votepost__value'),
-                models.Value(0)
+                models.Subquery(vote_sum),
+                models.Value(0),
             ),
-            comments_count = Coalesce(
-                models.Count('comments'),
-                models.Value(0)
-            )
+            comments_count = models.Count('comments',distinct=True)
         )
     def get_user_vote(self,user):
         if not user.is_authenticated:
             return self.get_queryset().annotate(
-                request_vote=models.Value(0),
+                user_vote=models.Value(0),
             )
         else:
             request_vote = VotePost.objects.filter(
