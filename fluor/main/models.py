@@ -18,10 +18,14 @@ class Profile(models.Model):
 class PostManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().annotate(
-            score=Coalesce(models.Sum(
-                'votepost__value'),
+            score=Coalesce(
+                models.Sum('votepost__value'),
                 models.Value(0)
             ),
+            comments_count = Coalesce(
+                models.Count('comments'),
+                models.Value(0)
+            )
         )
     def get_user_vote(self,user):
         if not user.is_authenticated:
