@@ -1,6 +1,7 @@
 {% extends "html/main_base.html" %}
 
 {% block title %}{{ post.title }}{% endblock %}
+
 {% block body_class %}page-post{% endblock %}
 
 {% block content %}
@@ -34,11 +35,14 @@
     {% if user.is_authenticated %}
         <div class="card" style="margin-top: 20px;">
             <h1 class="feed-title">Оставить комментарий</h1>
+
             <form method="post" action="{% url 'post' post.id %}" class="create-post-form" novalidate>
                 {% csrf_token %}
+
                 {% if comment_form.non_field_errors %}
                     <div class="alert-error">{{ comment_form.non_field_errors }}</div>
                 {% endif %}
+
                 <div class="form-group{% if comment_form.text.errors %} has-error{% endif %}">
                     <label for="{{ comment_form.text.id_for_label }}">{{ comment_form.text.label }}</label>
                     {{ comment_form.text }}
@@ -48,13 +52,19 @@
                         </ul>
                     {% endif %}
                 </div>
+
                 <button type="submit" class="btn">Отправить</button>
             </form>
+        </div>
+    {% else %}
+        <div class="card" style="margin-top: 20px; text-align: center;">
+            <p><a class="link-accent" href="{% url 'login' %}?next={{ request.path }}">Войдите</a>, чтобы оставить комментарий.</p>
         </div>
     {% endif %}
 
     <section id="comments" class="card" style="margin-top: 20px;">
         <h2 style="margin-top: 0; margin-bottom: 20px; font-size: 22px;">Комментарии ({{ post.comments_count }})</h2>
+
         <div class="comments-list">
             {% for comment in comments %}
                 <div style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eef1f4;">
@@ -69,12 +79,6 @@
             {% endfor %}
         </div>
     </section>
-
-    {% if not user.is_authenticated %}
-        <div class="card" style="margin-top: 20px; text-align: center;">
-            <p><a class="link-accent" href="{% url 'login' %}?next={{ request.path }}">Войдите</a>, чтобы оставить комментарий.</p>
-        </div>
-    {% endif %}
 
     <a class="btn btn--inline" href="{% url 'main' %}">Назад в ленту</a>
 </div>

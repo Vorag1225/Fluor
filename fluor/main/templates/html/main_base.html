@@ -352,7 +352,7 @@
         }
 
         const csrftoken = getCookie('csrftoken');
-        const isAuthenticated = {{ user.is_authenticated|yesno:"true,false" }};
+        const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
 
         function showModal(id) {
             document.getElementById(id).classList.add('active');
