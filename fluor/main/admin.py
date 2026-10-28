@@ -13,7 +13,7 @@ class PostAdmin(admin.ModelAdmin):
     list_filter = ['created_at']
     search_fields = ['title', 'text', 'author__username', 'author__first_name']
 
-@admin.register(Vote)
-class VoteAdmin(admin.ModelAdmin):
+@admin.register(VotePost)
+class VotePostAdmin(admin.ModelAdmin):
     list_display = ['user', 'post', 'value', 'created_at']
     list_filter = ['user', 'post', 'value', 'created_at']

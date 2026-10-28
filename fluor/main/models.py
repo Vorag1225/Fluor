@@ -32,7 +32,7 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('post', kwargs={'id': self.id})
 
-class Vote(models.Model):
+class VotePost(models.Model):
     class Value(models.IntegerChoices):                       # Варианты голосов
         UPVOTE = 1, "UP"
         DOWNVOTE = -1, "DOWN"
