@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.functions import Coalesce
 from django.contrib.auth.models import User
 from django.urls import reverse
 # Create your models here.
@@ -14,7 +15,31 @@ class Profile(models.Model):
     def get_absolute_url(self): # в админке позволяет перейти на страницу профиля
         return reverse('profile', kwargs={'id': self.user.id})
 
+class PostManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().annotate(
+            score=Coalesce(models.Sum(
+                'votepost__value'),
+                models.Value(0)
+            ),
+        )
+    def get_user_vote(self,user):
+        if not user.is_authenticated:
+            return self.get_queryset().annotate(
+                request_vote=models.Value(0),
+            )
+        else:
+            request_vote = VotePost.objects.filter(
+                post_id=models.OuterRef('pk'),
+                user=user,
+            ).values('value')[:1]
 
+            return self.get_queryset().annotate(
+                user_vote=Coalesce(
+                    models.Subquery(request_vote),
+                    models.Value(0)
+                )
+            )
 
 class Post(models.Model):
     author = models.ForeignKey(                             # Автор поста
@@ -25,6 +50,8 @@ class Post(models.Model):
     title = models.CharField(max_length=200)                # Заголовок поста
     text = models.TextField()                               # Текст поста
     created_at = models.DateTimeField(auto_now_add=True)    # Когда был создан пост
+
+    objects = PostManager()
 
     def __str__(self):
         return self.title
