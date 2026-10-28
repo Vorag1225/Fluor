@@ -18,3 +18,9 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['post', 'author', 'created_at']
     list_filter = ['created_at']
     search_fields = ['text', 'author__username', 'post__title']
+
+
+@admin.register(VotePost)
+class VotePostAdmin(admin.ModelAdmin):
+    list_display = ['user', 'post', 'value', 'created_at']
+    list_filter = ['user', 'post', 'value', 'created_at']
