@@ -169,32 +169,22 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.5); z-index: 1000;
             justify-content: center; align-items: center;
-
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
+            opacity: 0; visibility: hidden; pointer-events: none;
             transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
+            opacity: 1; visibility: visible; pointer-events: auto;
         }
 
         .modal-content {
             background: #fff; padding: 30px; border-radius: 12px;
             max-width: 400px; width: 90%; text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: relative;
-
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
+            position: relative; transform: scale(0.9); transition: transform 0.3s ease;
         }
 
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
 
         .modal-close {
             position: absolute; top: 10px; right: 15px; background: none;
@@ -224,9 +214,30 @@
         .post-meta a { color: #4a90e2; text-decoration: none; font-weight: 600; transition: color .3s; }
         .post-meta a:hover { color: #357abd; text-decoration: underline; }
         .post-text { margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #333333; white-space: pre-line; word-wrap: break-word; }
-        .post-date { display: block; font-size: 13px; color: #999999; border-top: 1px solid #eeeeee; padding-top: 15px; }
+        .post-date { display: block; font-size: 13px; color: #999999; }
         .empty { text-align: center; color: #777777; }
         .empty p { margin: 0; font-size: 16px; }
+
+        .post-layout {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .post-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .post-footer {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eeeeee;
+            flex-wrap: wrap;
+        }
 
         .page-profile .profile-card { margin-bottom: 30px; }
         .page-profile .profile-head { display: flex; align-items: center; gap: 18px; padding-bottom: 25px; border-bottom: 1px solid #eef1f4; }
@@ -250,24 +261,32 @@
 
         .vote-pill {
             display: inline-flex;
+            flex-direction: column;
             align-items: center;
             background-color: #2A3236;
-            border-radius: 20px;
-            padding: 4px 10px;
-            gap: 6px;
+            border-radius: 16px;
+            padding: 6px 8px;
+            gap: 2px;
             vertical-align: middle;
             transition: opacity 0.2s;
         }
+
         .vote-btn {
             background: none; border: none; cursor: pointer; padding: 0;
             display: flex; align-items: center; justify-content: center;
             color: #d7dadc; opacity: 0.7;
             transition: opacity 0.2s, color 0.2s;
         }
+
         .vote-btn:hover { opacity: 1; color: #ffffff; }
         .vote-btn.vote-up.active { color: #ff4500; opacity: 1; }
         .vote-btn.vote-down.active { color: #7193ff; opacity: 1; }
-        .vote-score { font-size: 14px; font-weight: 700; color: #ffffff; margin: 0 2px; min-width: 12px; text-align: center; }
+
+        .vote-score {
+            font-size: 14px; font-weight: 700; color: #ffffff;
+            margin: 2px 0;
+            min-width: 12px; text-align: center;
+        }
 
         .vote-pill.loading {
             pointer-events: none;
@@ -351,6 +370,27 @@
             return cookieValue;
         }
 
+        function formatNumber(num) {
+            num = parseInt(num);
+            if (isNaN(num)) return num;
+
+            const isNegative = num < 0;
+            const absNum = Math.abs(num);
+            let result = absNum;
+
+            if (absNum >= 1000000000) {
+                result = (absNum / 1000000000).toFixed(1).replace('.0', '').replace('.', ',') + ' млрд.';
+            } else if (absNum >= 1000000) {
+                result = (absNum / 1000000).toFixed(1).replace('.0', '').replace('.', ',') + ' млн.';
+            } else if (absNum >= 1000) {
+                result = (absNum / 1000).toFixed(1).replace('.0', '').replace('.', ',') + ' тыс.';
+            } else {
+                result = absNum;
+            }
+
+            return isNegative ? '-' + result : result;
+        }
+
         const csrftoken = getCookie('csrftoken');
         const isAuthenticated = {{ request.user.is_authenticated|yesno:"true,false" }};
 
@@ -363,6 +403,13 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.vote-score').forEach(el => {
+                el.innerText = formatNumber(el.innerText);
+            });
+            document.querySelectorAll('.comments-count').forEach(el => {
+                el.innerText = formatNumber(el.innerText);
+            });
+
             const voteButtons = document.querySelectorAll('.vote-btn');
 
             voteButtons.forEach(btn => {
@@ -375,7 +422,6 @@
                     }
 
                     const votePill = btn.closest('.vote-pill');
-
                     if (votePill.classList.contains('loading')) return;
 
                     votePill.classList.add('loading');
@@ -401,7 +447,7 @@
                             return;
                         }
 
-                        votePill.querySelector('.vote-score').innerText = data.score;
+                        votePill.querySelector('.vote-score').innerText = formatNumber(data.score);
 
                         const upBtn = votePill.querySelector('.vote-up');
                         const downBtn = votePill.querySelector('.vote-down');

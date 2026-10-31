@@ -9,19 +9,7 @@
 
     {% for post in posts %}
         <article class="card post-card">
-            <h2>
-                <a href="{% url 'post' post.id %}">{{ post.title }}</a>
-            </h2>
-
-            <p class="post-meta">
-                <span class="author-label">Автор:</span>
-                <a href="{% url 'profile' post.author.id %}">{{ post.author.first_name }}</a>
-            </p>
-
-            <p class="post-text">{{ post.text }}</p>
-
-            <div style="display: flex; align-items: center; gap: 15px; border-top: 1px solid #eeeeee; padding-top: 15px; flex-wrap: wrap;">
-
+            <div class="post-layout">
                 <div class="vote-pill" data-post-id="{{ post.id }}">
                     <button class="vote-btn vote-up {% if post.user_vote|add:'0' == 1 %}active{% endif %}" data-value="1">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -32,11 +20,25 @@
                     </button>
                 </div>
 
-                <a href="{% url 'post' post.id %}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
-                    Комментарии ({{ post.comments_count }})
-                </a>
+                <div class="post-content">
+                    <h2>
+                        <a href="{% url 'post' post.id %}">{{ post.title }}</a>
+                    </h2>
 
-                <small class="post-date" style="border: none; padding: 0; margin-left: auto;">{{ post.created_at }}</small>
+                    <p class="post-meta">
+                        <span class="author-label">Автор:</span>
+                        <a href="{% url 'profile' post.author.id %}">{{ post.author.first_name }}</a>
+                    </p>
+
+                    <p class="post-text">{{ post.text }}</p>
+
+                    <div class="post-footer">
+                        <a href="{% url 'post' post.id %}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
+                            Комментарии (<span class="comments-count">{{ post.comments_count }}</span>)
+                        </a>
+                        <small class="post-date" style="margin-left: auto;">{{ post.created_at }}</small>
+                    </div>
+                </div>
             </div>
         </article>
     {% empty %}
