@@ -159,3 +159,6 @@ def vote_api(request,post_id):
         "score": result["score"],
         "value": result["value"]
     })
+
+def game(request):
+    return render(request, 'html/game.html')

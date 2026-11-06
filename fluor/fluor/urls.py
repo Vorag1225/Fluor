@@ -28,6 +28,7 @@ urlpatterns = [
     path('posts/create/', create_post_view, name='create_post'),    # Создание поста
     path('posts/<int:id>/', post_view, name='post'),    # Маршрут для поста
     path('api/posts/<int:post_id>/vote/', vote_api, name='vote_api'),
+    path('game/',game,name='game'),
 ]
 
 handler404 = error_404_view

@@ -5,6 +5,11 @@ def navpan(request):
          'url_path': None,
          'url_query': None,
         },
+        {'title': 'Игра',
+         'url_name': 'game',
+         'url_path': None,
+         'url_query': None,
+        },
     ]
     if request.user.is_authenticated:
         if request.user.is_staff or request.user.is_superuser:
