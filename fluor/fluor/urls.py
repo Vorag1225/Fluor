@@ -27,6 +27,7 @@ urlpatterns = [
     path('users/<int:id>',profile_view, name = 'profile'),
     path('posts/create/', create_post_view, name='create_post'),    # Создание поста
     path('posts/<int:id>/', post_view, name='post'),    # Маршрут для поста
+    path('api/feed/', feed_api, name='feed_api'),   # Подгрузка следующих постов ленты
     path('api/posts/<int:post_id>/vote/', vote_api, name='vote_api'),
 ]
 

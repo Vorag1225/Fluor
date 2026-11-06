@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView
 from django.views.generic.edit import CreateView
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -16,13 +16,35 @@ import json
 
 # Create your views here.
 def main_view(request):
-    posts = Post.objects.get_user_vote(request.user).all().order_by('-created_at')
+    # Отдаём только первую порцию постов, остальные фронт подгружает через feed_api
+    page = get_feed_page(request.user)
 
     context = {
-        'posts': posts
+        'posts': page['posts'],
+        'has_more': page['has_more'],
+        'next_cursor': page['next_cursor'],
     }
 
     return render(request, 'html/feed.html', context)
+
+@require_GET
+def feed_api(request):
+    """GET /api/feed/?cursor=<next_cursor>&limit=<n> — следующая порция постов ленты."""
+    try:
+        limit = get_page_size(request.GET.get('limit'))
+        page = get_feed_page(
+            request.user,
+            cursor=request.GET.get('cursor') or None,
+            limit=limit,
+        )
+    except (InvalidCursor, ValueError) as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({
+        "posts": [serialize_post(p) for p in page['posts']],
+        "has_more": page['has_more'],
+        "next_cursor": page['next_cursor'],
+    })
 
 def post_view(request, id):
     post = get_object_or_404(Post.objects.get_user_vote(request.user), id=id)

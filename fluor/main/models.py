@@ -58,6 +58,12 @@ class Post(models.Model):
 
     objects = PostManager()
 
+    class Meta:
+        indexes = [
+            # Под курсорную пагинацию ленты: ORDER BY created_at DESC, id DESC
+            models.Index(fields=['-created_at', '-id'], name='post_feed_idx'),
+        ]
+
     def __str__(self):
         return self.title
 
