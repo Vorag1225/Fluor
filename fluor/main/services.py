@@ -46,9 +46,6 @@ def post_vote(user,post_id,value):
     }
 
 
-
-
-
 class InvalidCursor(ValueError):
     """Курсор повреждён или подделан."""
 
