@@ -70,7 +70,6 @@ def decode_cursor(cursor):
 def get_page_size(raw_limit=None):
     """Размер порции: из ?limit= (если передан), иначе FEED_PAGE_SIZE; не больше FEED_MAX_PAGE_SIZE."""
     default = getattr(settings, 'FEED_PAGE_SIZE', 20)
-    maximum = getattr(settings, 'FEED_MAX_PAGE_SIZE', 50)
     if raw_limit in (None, ''):
         return default
     try:
@@ -79,7 +78,7 @@ def get_page_size(raw_limit=None):
         raise ValueError("limit должен быть целым числом")
     if limit < 1:
         raise ValueError("limit должен быть больше 0")
-    return min(limit, maximum)
+    return limit
 
 
 def get_feed_page(user, cursor=None, limit=None, queryset=None):
