@@ -303,6 +303,29 @@
             .page-profile .profile-head h1 { font-size: 20px; }
             .create-post-form input[type="text"], .create-post-form textarea { font-size: 15px; }
         }
+
+        .loader-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a90e2;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .post-card--new {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
         {% endblock %}
     </style>
 </head>
@@ -402,6 +425,66 @@
             document.getElementById(id).classList.remove('active');
         }
 
+        document.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.vote-btn');
+            if (!btn) return;
+
+            e.preventDefault();
+
+            if (!isAuthenticated) {
+                showModal('auth-modal');
+                return;
+            }
+
+            const votePill = btn.closest('.vote-pill');
+            if (votePill.classList.contains('loading')) return;
+
+            votePill.classList.add('loading');
+
+            const postId = votePill.dataset.postId;
+            const value = parseInt(btn.dataset.value);
+
+            try {
+                const response = await fetch(`/api/posts/${postId}/vote/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ value: value })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    document.getElementById('error-message-text').innerText = data.error || 'Неизвестная ошибка';
+                    showModal('error-modal');
+                    return;
+                }
+
+                votePill.querySelector('.vote-score').innerText = formatNumber(data.score);
+
+                const upBtn = votePill.querySelector('.vote-up');
+                const downBtn = votePill.querySelector('.vote-down');
+
+                upBtn.classList.remove('active');
+                downBtn.classList.remove('active');
+
+                const currentVote = parseInt(data.value);
+                if (currentVote === 1) {
+                    upBtn.classList.add('active');
+                } else if (currentVote === -1) {
+                    downBtn.classList.add('active');
+                }
+
+            } catch (err) {
+                document.getElementById('error-message-text').innerText = 'Ошибка сети. Проверьте подключение.';
+                showModal('error-modal');
+            } finally {
+                votePill.classList.remove('loading');
+            }
+        });
+
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.vote-score').forEach(el => {
                 el.innerText = formatNumber(el.innerText);
@@ -409,68 +492,9 @@
             document.querySelectorAll('.comments-count').forEach(el => {
                 el.innerText = formatNumber(el.innerText);
             });
-
-            const voteButtons = document.querySelectorAll('.vote-btn');
-
-            voteButtons.forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-
-                    if (!isAuthenticated) {
-                        showModal('auth-modal');
-                        return;
-                    }
-
-                    const votePill = btn.closest('.vote-pill');
-                    if (votePill.classList.contains('loading')) return;
-
-                    votePill.classList.add('loading');
-
-                    const postId = votePill.dataset.postId;
-                    const value = parseInt(btn.dataset.value);
-
-                    try {
-                        const response = await fetch(`/api/posts/${postId}/vote/`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRFToken': csrftoken
-                            },
-                            body: JSON.stringify({ value: value })
-                        });
-
-                        const data = await response.json();
-
-                        if (!response.ok) {
-                            document.getElementById('error-message-text').innerText = data.error || 'Неизвестная ошибка';
-                            showModal('error-modal');
-                            return;
-                        }
-
-                        votePill.querySelector('.vote-score').innerText = formatNumber(data.score);
-
-                        const upBtn = votePill.querySelector('.vote-up');
-                        const downBtn = votePill.querySelector('.vote-down');
-
-                        upBtn.classList.remove('active');
-                        downBtn.classList.remove('active');
-
-                        const currentVote = parseInt(data.value);
-                        if (currentVote === 1) {
-                            upBtn.classList.add('active');
-                        } else if (currentVote === -1) {
-                            downBtn.classList.add('active');
-                        }
-
-                    } catch (err) {
-                        document.getElementById('error-message-text').innerText = 'Ошибка сети. Проверьте подключение.';
-                        showModal('error-modal');
-                    } finally {
-                        votePill.classList.remove('loading');
-                    }
-                });
-            });
         });
     </script>
+
+    {% block extra_js %}{% endblock %}
 </body>
 </html>

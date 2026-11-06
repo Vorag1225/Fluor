@@ -4,44 +4,167 @@
 {% block body_class %}page-feed{% endblock %}
 
 {% block content %}
-<div class="feed-wrapper">
+<div class="feed-wrapper" id="feed"
+     data-next-cursor="{{ next_cursor|default:'' }}"
+     data-has-more="{{ has_more|yesno:'1,0' }}">
     <h1 class="feed-title">Поток</h1>
 
-    {% for post in posts %}
-        <article class="card post-card">
-            <h2>
-                <a href="{% url 'post' post.id %}">{{ post.title }}</a>
-            </h2>
+    <div id="feed-posts-container">
+        {% for post in posts %}
+            <article class="card post-card">
+                <h2>
+                    <a href="{% url 'post' post.id %}">{{ post.title }}</a>
+                </h2>
 
+                <p class="post-meta">
+                    <span class="author-label">Автор:</span>
+                    <a href="{% url 'profile' post.author.id %}">{{ post.author.first_name }}</a>
+                </p>
+
+                <p class="post-text">{{ post.text }}</p>
+
+                <div class="post-footer">
+                    <div class="vote-pill" data-post-id="{{ post.id }}">
+                        <button class="vote-btn vote-up {% if post.user_vote|add:'0' == 1 %}active{% endif %}" data-value="1">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        </button>
+                        <span class="vote-score">{{ post.score }}</span>
+                        <button class="vote-btn vote-down {% if post.user_vote|add:'0' == -1 %}active{% endif %}" data-value="-1">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                        </button>
+                    </div>
+
+                    <a href="{% url 'post' post.id %}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
+                        Комментарии (<span class="comments-count">{{ post.comments_count }}</span>)
+                    </a>
+
+                    <small class="post-date" style="margin-left: auto;">{{ post.created_at }}</small>
+                </div>
+            </article>
+        {% empty %}
+            <div class="card empty">
+                <p>Постов пока нет.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="feed-loader" style="display: none; padding: 20px; text-align: center;">
+        <div class="loader-spinner"></div>
+    </div>
+
+    <div id="feed-sentinel" style="height: 50px; margin-top: 20px;"></div>
+
+    <div id="feed-end-message" style="text-align: center; color: #777; display: none; margin-bottom: 20px;">
+        Постов больше нет
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function formatDate(isoString) {
+        const date = new Date(isoString);
+        return date.toLocaleString('ru-RU', {
+            day: 'numeric', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function renderPost(post) {
+        const article = document.createElement('article');
+        article.className = 'card post-card post-card--new';
+
+        article.innerHTML = `
+            <h2>
+                <a href="${post.url}" class="post-title-link"></a>
+            </h2>
             <p class="post-meta">
                 <span class="author-label">Автор:</span>
-                <a href="{% url 'profile' post.author.id %}">{{ post.author.first_name }}</a>
+                <a href="${post.author.url}" class="post-author-link"></a>
             </p>
-
-            <p class="post-text">{{ post.text }}</p>
-
+            <p class="post-text post-text-content"></p>
             <div class="post-footer">
-                <div class="vote-pill" data-post-id="{{ post.id }}">
-                    <button class="vote-btn vote-up {% if post.user_vote|add:'0' == 1 %}active{% endif %}" data-value="1">
+                <div class="vote-pill" data-post-id="${post.id}">
+                    <button class="vote-btn vote-up ${post.user_vote === 1 ? 'active' : ''}" data-value="1">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
                     </button>
-                    <span class="vote-score">{{ post.score }}</span>
-                    <button class="vote-btn vote-down {% if post.user_vote|add:'0' == -1 %}active{% endif %}" data-value="-1">
+                    <span class="vote-score">${formatNumber(post.score)}</span>
+                    <button class="vote-btn vote-down ${post.user_vote === -1 ? 'active' : ''}" data-value="-1">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
                     </button>
                 </div>
-
-                <a href="{% url 'post' post.id %}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
-                    Комментарии (<span class="comments-count">{{ post.comments_count }}</span>)
+                <a href="${post.url}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
+                    Комментарии (<span class="comments-count">${formatNumber(post.comments_count)}</span>)
                 </a>
-
-                <small class="post-date" style="margin-left: auto;">{{ post.created_at }}</small>
+                <small class="post-date" style="margin-left: auto;">${formatDate(post.created_at)}</small>
             </div>
-        </article>
-    {% empty %}
-        <div class="card empty">
-            <p>Постов пока нет.</p>
-        </div>
-    {% endfor %}
-</div>
+        `;
+
+        article.querySelector('.post-title-link').textContent = post.title;
+        article.querySelector('.post-author-link').textContent = post.author.first_name;
+        article.querySelector('.post-text-content').textContent = post.text;
+
+        return article;
+    }
+
+    (function() {
+        const feed = document.getElementById('feed');
+        const sentinel = document.getElementById('feed-sentinel');
+        const endMessage = document.getElementById('feed-end-message');
+        const postsContainer = document.getElementById('feed-posts-container');
+        const loader = document.getElementById('feed-loader');
+
+        if (!feed || !sentinel) return;
+
+        let cursor = feed.dataset.nextCursor;
+        let hasMore = feed.dataset.hasMore === '1';
+        let loading = false;
+
+        async function loadMore() {
+            if (loading || !hasMore || !cursor) return;
+
+            loading = true;
+            loader.style.display = 'block';
+
+            try {
+                const response = await fetch(`/api/feed/?cursor=${encodeURIComponent(cursor)}`);
+                if (!response.ok) throw new Error("HTTP ошибка: " + response.status);
+
+                const data = await response.json();
+
+                await new Promise(resolve => setTimeout(resolve, 800));
+
+                data.posts.forEach(post => {
+                    const postElement = renderPost(post);
+                    postsContainer.appendChild(postElement);
+                });
+
+                cursor = data.next_cursor;
+                hasMore = data.has_more;
+
+                if (!hasMore) {
+                    observer.disconnect();
+                    endMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки постов:', error);
+            } finally {
+                loading = false;
+                loader.style.display = 'none';
+            }
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            if (entries[0].isIntersecting) {
+                loadMore();
+            }
+        }, { rootMargin: '100px' });
+
+        if (hasMore && cursor) {
+            observer.observe(sentinel);
+        } else {
+            endMessage.style.display = 'block';
+        }
+    })();
+</script>
 {% endblock %}
