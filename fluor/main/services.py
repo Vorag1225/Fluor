@@ -1,7 +1,11 @@
 from django.db import transaction
 from django.urls import reverse
 from django.db.models import Sum
-
+import base64
+import binascii
+from datetime import datetime
+from django.conf import settings
+from django.db.models import Q
 from .models import *
 
 @transaction.atomic
@@ -42,23 +46,7 @@ def post_vote(user,post_id,value):
     }
 
 
-# ---------------------------------------------------------------------------
-# Постепенная подгрузка ленты (курсорная пагинация)
-# ---------------------------------------------------------------------------
-# Почему курсор, а не OFFSET/номер страницы:
-#  * OFFSET N заставляет БД пройти N строк, чем дальше — тем медленнее;
-#  * если пока пользователь листает, появился новый пост, номерные страницы
-#    «сдвигаются» и посты дублируются/пропадают. Курсор «после такого-то поста»
-#    от этого не зависит.
-# Порядок ленты: от новых к старым, (created_at DESC, id DESC). id нужен как
-# tie-breaker, если у нескольких постов совпадает created_at.
 
-import base64
-import binascii
-from datetime import datetime
-
-from django.conf import settings
-from django.db.models import Q
 
 
 class InvalidCursor(ValueError):
@@ -98,14 +86,7 @@ def get_page_size(raw_limit=None):
 
 
 def get_feed_page(user, cursor=None, limit=None, queryset=None):
-    """
-    Возвращает одну порцию ленты:
-        {'posts': [Post, ...], 'next_cursor': str | None, 'has_more': bool}
-
-    cursor=None — первая порция (самые новые посты).
-    Из БД берётся limit + 1 строка: лишняя нужна только чтобы узнать,
-    есть ли что-то дальше, и в ответ не попадает.
-    """
+    """Возвращает одну порцию ленты: {'posts': [Post, ...], 'next_cursor': str | None, 'has_more': bool}"""
     limit = limit or get_page_size()
     if queryset is None:
         queryset = Post.objects.get_user_vote(user)

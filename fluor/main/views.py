@@ -16,7 +16,7 @@ import json
 
 # Create your views here.
 def main_view(request):
-    # Отдаём только первую порцию постов, остальные фронт подгружает через feed_api
+    # Отдаёт только первую порцию постов, остальные подгружаются через feed_api
     page = get_feed_page(request.user)
 
     context = {

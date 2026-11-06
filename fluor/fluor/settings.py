@@ -126,6 +126,5 @@ MAILERS = {
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'main'
 
-# Лента: постепенная подгрузка постов
-FEED_PAGE_SIZE = 20          # сколько постов отдаётся за один запрос
-FEED_MAX_PAGE_SIZE = 50      # верхняя граница для параметра ?limit=
+# Постепенная подгрузка постов
+FEED_PAGE_SIZE = 20
