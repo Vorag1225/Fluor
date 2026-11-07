@@ -120,12 +120,39 @@ def logout_user(request):
 
 def profile_view(request, id):
     user = get_object_or_404(User, id=id)
-    user_posts = Post.objects.get_user_vote(request.user).filter(author_id=id).order_by('-created_at')
+    # Только первая порция постов автора, остальные фронт подгружает через user_posts_api
+    page = get_feed_page(
+        request.user,
+        queryset=Post.objects.get_user_vote(request.user).filter(author_id=id),
+    )
     context = {
         'user': user,
-        'posts': user_posts
+        'posts': page['posts'],
+        'has_more': page['has_more'],
+        'next_cursor': page['next_cursor'],
     }
     return render(request, 'html/profile.html', context)
+
+@require_GET
+def user_posts_api(request, id):
+    """GET /api/users/<id>/posts/?cursor=<next_cursor>&limit=<n> — следующая порция постов пользователя."""
+    if not User.objects.filter(id=id).exists():
+        return JsonResponse({"error": "Пользователь не найден"}, status=404)
+    try:
+        page = get_feed_page(
+            request.user,
+            cursor=request.GET.get('cursor') or None,
+            limit=get_page_size(request.GET.get('limit')),
+            queryset=Post.objects.get_user_vote(request.user).filter(author_id=id),
+        )
+    except (InvalidCursor, ValueError) as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({
+        "posts": [serialize_post(p) for p in page['posts']],
+        "has_more": page['has_more'],
+        "next_cursor": page['next_cursor'],
+    })
 
 
 def error_404_view(request, exception):
