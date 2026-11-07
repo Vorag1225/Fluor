@@ -4,7 +4,11 @@
 {% block body_class %}page-profile{% endblock %}
 
 {% block content %}
-<div class="profile-wrapper">
+<div class="profile-wrapper" id="profile-feed"
+     data-user-id="{{ user.id }}"
+     data-next-cursor="{{ next_cursor|default:'' }}"
+     data-has-more="{{ has_more|yesno:'1,0' }}">
+
     <div class="card profile-card">
         <div class="profile-head">
             {% if user.profile.avatar %}
@@ -34,7 +38,7 @@
 
     <div id="profile-posts-container">
         {% for post in posts %}
-            <article class="card post-card {% if forloop.counter > 20 %}hidden-post{% endif %}">
+            <article class="card post-card">
                 <h2>
                     <a href="{% url 'post' post.id %}">{{ post.title }}</a>
                 </h2>
@@ -85,48 +89,96 @@
 
 {% block extra_js %}
 <script>
-    const style = document.createElement('style');
-    style.innerHTML = `.hidden-post { display: none !important; }`;
-    document.head.appendChild(style);
+    function formatDate(isoString) {
+        const date = new Date(isoString);
+        return date.toLocaleString('ru-RU', {
+            day: 'numeric', month: 'long', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    }
+
+    function renderPost(post) {
+        const article = document.createElement('article');
+        article.className = 'card post-card post-card--new';
+
+        article.innerHTML = `
+            <h2>
+                <a href="${post.url}" class="post-title-link"></a>
+            </h2>
+            <p class="post-meta">
+                <span class="author-label">Автор:</span>
+                <a href="${post.author.url}" class="post-author-link"></a>
+            </p>
+            <p class="post-text post-text-content"></p>
+            <div class="post-footer">
+                <div class="vote-pill" data-post-id="${post.id}">
+                    <button class="vote-btn vote-up ${post.user_vote === 1 ? 'active' : ''}" data-value="1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                    </button>
+                    <span class="vote-score">${formatNumber(post.score)}</span>
+                    <button class="vote-btn vote-down ${post.user_vote === -1 ? 'active' : ''}" data-value="-1">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+                    </button>
+                </div>
+                <a href="${post.url}#comments" style="color: #666; text-decoration: none; font-size: 14px; font-weight: 500;">
+                    Комментарии (<span class="comments-count">${formatNumber(post.comments_count)}</span>)
+                </a>
+                <small class="post-date" style="margin-left: auto;">${formatDate(post.created_at)}</small>
+            </div>
+        `;
+
+        article.querySelector('.post-title-link').textContent = post.title;
+        article.querySelector('.post-author-link').textContent = post.author.first_name;
+        article.querySelector('.post-text-content').textContent = post.text;
+
+        return article;
+    }
 
     (function() {
+        const profileFeed = document.getElementById('profile-feed');
         const sentinel = document.getElementById('profile-sentinel');
         const endMessage = document.getElementById('profile-end-message');
+        const postsContainer = document.getElementById('profile-posts-container');
         const loader = document.getElementById('profile-loader');
 
-        if (!sentinel) return;
+        if (!profileFeed || !sentinel) return;
 
+        let userId = profileFeed.dataset.userId;
+        let cursor = profileFeed.dataset.nextCursor;
+        let hasMore = profileFeed.dataset.hasMore === '1';
         let loading = false;
 
         async function loadMore() {
-            if (loading) return;
-
-            const hiddenPosts = document.querySelectorAll('.hidden-post');
-
-            if (hiddenPosts.length === 0) {
-                endMessage.style.display = 'block';
-                observer.disconnect();
-                return;
-            }
+            if (loading || !hasMore || !cursor) return;
 
             loading = true;
             loader.style.display = 'block';
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            try {
+                const response = await fetch(`/api/users/${userId}/posts/?cursor=${encodeURIComponent(cursor)}`);
+                if (!response.ok) throw new Error("HTTP ошибка: " + response.status);
 
-            const postsToShow = Array.from(hiddenPosts).slice(0, 20);
+                const data = await response.json();
 
-            postsToShow.forEach(post => {
-                post.classList.remove('hidden-post');
-                post.classList.add('post-card--new');
-            });
+                await new Promise(resolve => setTimeout(resolve, 800));
 
-            loading = false;
-            loader.style.display = 'none';
+                data.posts.forEach(post => {
+                    const postElement = renderPost(post);
+                    postsContainer.appendChild(postElement);
+                });
 
-            if (document.querySelectorAll('.hidden-post').length === 0) {
-                endMessage.style.display = 'block';
-                observer.disconnect();
+                cursor = data.next_cursor;
+                hasMore = data.has_more;
+
+                if (!hasMore) {
+                    observer.disconnect();
+                    endMessage.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки постов профиля:', error);
+            } finally {
+                loading = false;
+                loader.style.display = 'none';
             }
         }
 
@@ -136,7 +188,7 @@
             }
         }, { rootMargin: '100px' });
 
-        if (document.querySelectorAll('.hidden-post').length > 0) {
+        if (hasMore && cursor) {
             observer.observe(sentinel);
         } else {
             endMessage.style.display = 'block';
