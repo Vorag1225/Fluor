@@ -51,20 +51,18 @@ class InvalidCursor(ValueError):
 
 
 def encode_cursor(post):
-    raw = f"{post.created_at.isoformat()}|{post.pk}"
-    return base64.urlsafe_b64encode(raw.encode()).decode()
+    # Курсор = id последнего отданного поста
+    return str(post.pk)
 
 
 def decode_cursor(cursor):
     try:
-        raw = base64.urlsafe_b64decode(cursor.encode()).decode()
-        created_at_str, pk_str = raw.rsplit('|', 1)
-        created_at = datetime.fromisoformat(created_at_str)
-        if created_at.tzinfo is None:
-            raise ValueError("naive datetime")
-        return created_at, int(pk_str)
-    except (ValueError, UnicodeError, binascii.Error):
+        pk = int(cursor)
+    except (TypeError, ValueError):
         raise InvalidCursor("Некорректный курсор")
+    if pk < 1:
+        raise InvalidCursor("Некорректный курсор")
+    return pk
 
 
 def get_page_size(raw_limit=None):
@@ -86,13 +84,11 @@ def get_feed_page(user, cursor=None, limit=None, queryset=None):
     limit = limit or get_page_size()
     if queryset is None:
         queryset = Post.objects.get_user_vote(user)
-    queryset = queryset.select_related('author').order_by('-created_at', '-id')
+
+    queryset = queryset.select_related('author').order_by('-id')
 
     if cursor:
-        created_at, pk = decode_cursor(cursor)
-        queryset = queryset.filter(
-            Q(created_at__lt=created_at) | Q(created_at=created_at, id__lt=pk)
-        )
+        queryset = queryset.filter(id__lt=decode_cursor(cursor))
 
     posts = list(queryset[:limit + 1])
     has_more = len(posts) > limit
